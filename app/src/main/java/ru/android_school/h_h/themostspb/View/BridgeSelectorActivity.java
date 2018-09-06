@@ -83,7 +83,7 @@ public class BridgeSelectorActivity extends AppCompatActivity implements OnBridg
         data.subscribe(new Consumer<ArrayList<Bridge>>() {
             @Override
             public void accept(ArrayList<Bridge> bridges) throws Exception {
-                listFragment = ListFragment.newInstance(bridges, this);
+                listFragment = ListFragment.newInstance(bridges, BridgeSelectorActivity.this);
                 //mapFragment = MapFragment.newInstance(bridges,this);
                 switchButtonBlock(false);
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -110,9 +110,9 @@ public class BridgeSelectorActivity extends AppCompatActivity implements OnBridg
 
     @Override
     public void onBridgeClick(int id) {
-        Intent intent = new Intent(this, BridgeInfoActivity.class);
-        intent.putExtra(BridgeInfoActivity.ID_EXTRA, id);
-        startActivity(intent);
+//        Intent intent = new Intent(this, BridgeInfoActivity.class);
+//        intent.putExtra(BridgeInfoActivity.ID_EXTRA, id);
+//        startActivity(intent);
     }
 
     @Override

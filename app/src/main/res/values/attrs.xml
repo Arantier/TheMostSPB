@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="BridgeView">
+        <attr name="name" format="string"/>
+        <attr name="times" format="string"/>
+        <attr name="divorseState" format="enum">
+            <enum name="connect" value="0"/>
+            <enum name="divorse_soon" value="1"/>
+            <enum name="divorse" value="2"/>
+        </attr>
+        <attr name="isNotified" format="boolean"/>
+    </declare-styleable>
+</resources>
