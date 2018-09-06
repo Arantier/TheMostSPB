@@ -3,6 +3,9 @@ package ru.android_school.h_h.themostspb.View;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Rect;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -17,9 +20,39 @@ public class BridgeView extends View {
     private int divorseState;
     private boolean notificationState;
 
+    private int pixelsIndp,
+                pixelsInsp,
+
+                padding = 16,
+
+                stateIconWidth = 40,
+                stateIconHeight = 40,
+
+                notificationIconHeight = 24,
+                notificationIconWidth = 24,
+                notificationIconVerticalPadding=8,
+
+                nameFontSize = 16,
+                timesFontSize=14;
+
     public static final int BRIDGE_CONNECT=0,
                             BRIDGE_SOON=1,
                             BRIDGE_DIVORSE=2;
+
+    private Paint   namePaint,
+                    timesPaint;
+
+    private void init(){
+        namePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        namePaint.setColor(Color.BLACK);
+        namePaint.setTextSize(timesFontSize*pixelsInsp);
+
+        timesPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        namePaint.setColor(Color.parseColor(getResources().getColor(R.color.)));
+        namePaint.setTextSize(timesFontSize*pixelsInsp);
+
+        timesPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    }
 
     public BridgeView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -38,11 +71,18 @@ public class BridgeView extends View {
     //её отступы сверху и снизу - 8 dp. размер текста - 16sp для имени и l4sp для времени.
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int pixelsIndp = (int) TypedValue.applyDimension(
+        pixelsIndp = (int) TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP,
                 1,
                 getResources().getDisplayMetrics());
-
+        pixelsInsp = (int) (int) TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_SP,
+                1,
+                getResources().getDisplayMetrics());
+        setPadding(padding*pixelsIndp,padding*pixelsIndp,padding*pixelsIndp,padding*pixelsIndp);
+        int requiredMinimalWidth = getPaddingLeft()+stateIconWidth*pixelsIndp+notificationIconWidth*pixelsIndp+getPaddingRight();
+        Rect nameTextBounds = new Rect();
+        int requiredMinimalHeight = getPaddingTop()+Math.max(Math.max(stateIconHeight,notificationIconHeight),)
     }
 
     @Override
