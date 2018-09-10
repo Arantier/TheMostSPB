@@ -87,14 +87,15 @@ public class BridgeSelectorActivity extends AppCompatActivity implements OnBridg
     protected void onStart() {
         super.onStart();
         loadFragment = LoadFragment.newInstance();
-        //Надо определить колбек для обновления
         errorFragment = ErrorFragment.newInstance(this);
         presenter.attachSelector(this);
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.layout_fragment_container, loadFragment)
-                .commit();
-        switchButtonBlock(true);
-        presenter.requestData();
+        if (listFragment == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.layout_fragment_container, loadFragment)
+                    .commit();
+            switchButtonBlock(true);
+            presenter.requestData();
+        }
     }
 
     @Override
@@ -134,9 +135,7 @@ public class BridgeSelectorActivity extends AppCompatActivity implements OnBridg
 
     @Override
     public void onBridgeClick(int id) {
-//        Intent intent = new Intent(this, BridgeInfoActivity.class);
-//        intent.putExtra(BridgeInfoActivity.ID_EXTRA, id);
-//        startActivity(intent);
+        presenter.summoneBridgeById(id);
     }
 
     @Override
@@ -145,6 +144,6 @@ public class BridgeSelectorActivity extends AppCompatActivity implements OnBridg
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.layout_fragment_container, loadFragment)
                 .commit();
-//        presenter.requestData();
+        presenter.requestData();
     }
 }

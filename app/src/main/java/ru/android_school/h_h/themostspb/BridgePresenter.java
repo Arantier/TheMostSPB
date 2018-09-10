@@ -1,10 +1,13 @@
 package ru.android_school.h_h.themostspb;
 
+import android.content.Intent;
+
 import java.util.ArrayList;
 
 import io.reactivex.Single;
 import ru.android_school.h_h.themostspb.Model.Bridge;
 import ru.android_school.h_h.themostspb.Model.BridgeProvider;
+import ru.android_school.h_h.themostspb.View.BridgeInfoActivity;
 import ru.android_school.h_h.themostspb.View.BridgeSelectorActivity;
 
 public class BridgePresenter {
@@ -38,6 +41,12 @@ public class BridgePresenter {
     public void requestData(){
         Single<ArrayList<Bridge>> bridgeData = provider.provideBridges();
         selectorActivity.setData(bridgeData);
+    }
+
+    public void summoneBridgeById(int id){
+        Intent summoning  = new Intent(selectorActivity,BridgeInfoActivity.class);
+        summoning.putExtra(BridgeInfoActivity.ID_EXTRA,id);
+        selectorActivity.startActivity(summoning);
     }
 
     private BridgePresenter(){
