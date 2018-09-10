@@ -10,6 +10,7 @@ public class Bridge {
 
     public float longtitude,
                 latitude;
+
     public String[] timeDivorse,
                 timeConnect;
 }

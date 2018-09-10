@@ -1,11 +1,19 @@
 <resources>
 
+    <style name="AppTheme" parent="BaseAppTheme"/>
+
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
+    <style name="BaseAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:colorForeground">@color/white</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="colorWhite">@color/white</item>
+        <item name="colorBlack">@color/black</item>
+        <!--colorControlNormal controls the ‘normal’ state of components such as
+            an unselected EditText, and unselected Checkboxes and RadioButtons-->
+        <!--<item name="android:colorControlNormal">@color/colorPrimary</item>-->
     </style>
 
 </resources>
