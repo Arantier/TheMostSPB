@@ -57,7 +57,7 @@ public class BridgeListAdapter extends RecyclerView.Adapter<BridgeListAdapter.Vi
 
     @Override
     public int getItemCount() {
-        return listOfBridges.size();
+        return (listOfBridges!=null) ? listOfBridges.size() : 0;
     }
 
     public BridgeListAdapter(ArrayList<Bridge> listOfBridges, OnBridgeClickListener listener) {

@@ -67,6 +67,8 @@ public class BridgeManager {
         return divorse;
     }
 
+    //TODO:Где-то тут ошибка, исправь и проверь
+
     public static Calendar getClosestConnection(Bridge bridge){
         Calendar connection = Calendar.getInstance();
         Calendar now = Calendar.getInstance();

@@ -34,7 +34,6 @@ public class BridgeProvider {
 
         @Override
         public ArrayList<Bridge> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-            Log.d("deserializer","I'm working");
             JsonObject rawData = json.getAsJsonObject();
 
             JsonArray rawArray = rawData.get("objects").getAsJsonArray();
@@ -59,8 +58,8 @@ public class BridgeProvider {
                 bridge.timeConnect = new String[rawIntervalsArray.size()];
                 for (int i = 0; i < rawIntervalsArray.size(); i++) {
                     JsonObject rawInterval = rawIntervalsArray.get(i).getAsJsonObject();
-                    bridge.timeDivorse[i] = rawInterval.get("start").getAsString().substring(0,5);
-                    bridge.timeConnect[i] = rawInterval.get("end").getAsString().substring(0,5);
+                    bridge.timeDivorse[i] = rawInterval.get("start").getAsString().substring(0, 5);
+                    bridge.timeConnect[i] = rawInterval.get("end").getAsString().substring(0, 5);
                 }
 
                 finalArray.add(bridge);
@@ -70,11 +69,42 @@ public class BridgeProvider {
         }
     }
 
+    public class BridgeDeserializer implements JsonDeserializer<Bridge> {
+
+        @Override
+        public Bridge deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            Bridge bridge = new Bridge();
+            JsonObject rawBridge = json.getAsJsonObject();
+
+            bridge.id = rawBridge.get("id").getAsInt();
+
+            bridge.name = rawBridge.get("name").getAsString();
+            bridge.description = rawBridge.get("description").getAsString();
+            bridge.bridgeDivorseUrl = rawBridge.get("photo_open").getAsString();
+            bridge.bridgeConnectUrl = rawBridge.get("photo_close").getAsString();
+
+            bridge.longtitude = rawBridge.get("lng").getAsFloat();
+            bridge.latitude = rawBridge.get("lat").getAsFloat();
+
+            JsonArray rawIntervalsArray = rawBridge.get("divorces").getAsJsonArray();
+            bridge.timeDivorse = new String[rawIntervalsArray.size()];
+            bridge.timeConnect = new String[rawIntervalsArray.size()];
+            for (int i = 0; i < rawIntervalsArray.size(); i++) {
+                JsonObject rawInterval = rawIntervalsArray.get(i).getAsJsonObject();
+                bridge.timeDivorse[i] = rawInterval.get("start").getAsString().substring(0, 5);
+                bridge.timeConnect[i] = rawInterval.get("end").getAsString().substring(0, 5);
+            }
+
+            return bridge;
+        }
+    }
+
     public BridgeProvider(String url) {
         apiURL = url;
         Retrofit.Builder builder = new Retrofit.Builder();
         Gson converter = new GsonBuilder()
                 .registerTypeAdapter(ArrayList.class, new DataDeserializer())
+                .registerTypeAdapter(Bridge.class, new BridgeDeserializer())
                 .create();
         api = builder.baseUrl(apiURL)
                 .addConverterFactory(GsonConverterFactory.create(converter))
@@ -82,8 +112,6 @@ public class BridgeProvider {
                 .build()
                 .create(BridgeAPI.class);
     }
-
-    ArrayList<Bridge> list;
 
     public Single<ArrayList<Bridge>> provideBridges() {
         return api.receiveBridges();

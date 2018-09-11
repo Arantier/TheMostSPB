@@ -66,7 +66,7 @@ public class BridgeSelectorActivity extends AppCompatActivity implements OnBridg
         setContentView(R.layout.activity_bridge_selector);
         presenter = BridgePresenter.getInstance();
         toolbar = findViewById(R.id.toolbar);
-        toolbar.inflateMenu(R.menu.menu_toolbar_switch_button);
+        toolbar.inflateMenu(R.menu.menu_activity_selector);
         toolbar.getMenu()
                 .findItem(R.id.menu_toolbar_switch)
                 .setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
@@ -94,7 +94,7 @@ public class BridgeSelectorActivity extends AppCompatActivity implements OnBridg
                     .add(R.id.layout_fragment_container, loadFragment)
                     .commit();
             switchButtonBlock(true);
-            presenter.requestData();
+            presenter.requestAllBridges();
         }
     }
 
@@ -135,7 +135,7 @@ public class BridgeSelectorActivity extends AppCompatActivity implements OnBridg
 
     @Override
     public void onBridgeClick(int id) {
-        presenter.summoneBridgeById(id);
+        presenter.summonBridgeById(id);
     }
 
     @Override
@@ -144,6 +144,6 @@ public class BridgeSelectorActivity extends AppCompatActivity implements OnBridg
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.layout_fragment_container, loadFragment)
                 .commit();
-        presenter.requestData();
+        presenter.requestAllBridges();
     }
 }

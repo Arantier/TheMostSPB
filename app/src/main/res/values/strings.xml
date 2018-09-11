@@ -12,7 +12,7 @@
     <string name="error_text">Возникла ошибка при загрузке данных</string>
     <string name="error_refresh">Обновить</string>
     <!--Load fragment-->
-    <string name="load_text">Загружаем список…</string>
+    <string name="load_text">Загрузка…</string>
     <string name="permission_rationale_title">Запрос разрешений на геолокацию</string>
     <string name="permission_rationale_message">Для возможности демонстрации Вам местоположения мостов Петербурга на карте необходимо выдать приложению разрешения на доступ к картам.</string>
     <string name="permission_rationale_close">Хорошо</string>

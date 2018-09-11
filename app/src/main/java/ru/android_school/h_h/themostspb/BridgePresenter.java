@@ -16,6 +16,7 @@ public class BridgePresenter {
 
     //=============Сущности типа View===============
     private BridgeSelectorActivity selectorActivity;
+    private BridgeInfoActivity infoActivity;
 
     //=============Сущности типа Model==============
     private BridgeProvider provider;
@@ -38,12 +39,12 @@ public class BridgePresenter {
         selectorActivity=null;
     }
 
-    public void requestData(){
+    public void requestAllBridges(){
         Single<ArrayList<Bridge>> bridgeData = provider.provideBridges();
         selectorActivity.setData(bridgeData);
     }
 
-    public void summoneBridgeById(int id){
+    public void summonBridgeById(int id){
         Intent summoning  = new Intent(selectorActivity,BridgeInfoActivity.class);
         summoning.putExtra(BridgeInfoActivity.ID_EXTRA,id);
         selectorActivity.startActivity(summoning);
@@ -51,5 +52,17 @@ public class BridgePresenter {
 
     private BridgePresenter(){
         provider = new BridgeProvider("http://gdemost.handh.ru/api/v1/");
+    }
+
+    public void attachInfo(BridgeInfoActivity bridgeInfoActivity) {
+        infoActivity = bridgeInfoActivity;
+    }
+
+    public void detachInfo(){
+        infoActivity = null;
+    }
+
+    public Single<Bridge> requestBridge(int id) {
+        return provider.getBridgeById(id);
     }
 }

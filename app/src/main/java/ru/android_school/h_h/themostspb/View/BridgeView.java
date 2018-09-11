@@ -145,21 +145,26 @@ public class BridgeView extends View {
         notificationIcon.draw(canvas);
 
         int textYStartPosition = (getHeight() - (int) (nameFontSize - timesFontSize)) / 2;
-        CharSequence ellipsizedName = TextUtils.ellipsize(name, namePaint, maximumTextWidth, TextUtils.TruncateAt.END);
-        canvas.drawText(ellipsizedName,
-                0,
-                ellipsizedName.length(),
-                (int) (divorseIconSide + padding * 2),
-                textYStartPosition,
-                namePaint);
 
-        CharSequence ellipsizedTimes = TextUtils.ellipsize(times, timesPaint, maximumTextWidth, TextUtils.TruncateAt.END);
-        canvas.drawText(ellipsizedTimes,
-                0,
-                ellipsizedTimes.length(),
-                (int) (divorseIconSide + padding * 2),
-                (int) (nameFontSize) + textYStartPosition,
-                timesPaint);
+        if (name != null) {
+            CharSequence ellipsizedName = TextUtils.ellipsize(name, namePaint, maximumTextWidth, TextUtils.TruncateAt.END);
+            canvas.drawText(ellipsizedName,
+                    0,
+                    ellipsizedName.length(),
+                    (int) (divorseIconSide + padding * 2),
+                    textYStartPosition,
+                    namePaint);
+        }
+
+        if (times != null) {
+            CharSequence ellipsizedTimes = TextUtils.ellipsize(times, timesPaint, maximumTextWidth, TextUtils.TruncateAt.END);
+            canvas.drawText(ellipsizedTimes,
+                    0,
+                    ellipsizedTimes.length(),
+                    (int) (divorseIconSide + padding * 2),
+                    (int) (nameFontSize) + textYStartPosition,
+                    timesPaint);
+        }
     }
 
     public void setName(String name) {
