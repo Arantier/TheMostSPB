@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import ru.android_school.h_h.themostspb.Model.Bridge;
 import ru.android_school.h_h.themostspb.Model.BridgeManager;
 import ru.android_school.h_h.themostspb.View.BridgeView;
-import ru.android_school.h_h.themostspb.View.OnBridgeClickListener;
+import ru.android_school.h_h.themostspb.View.SelectorActivity.OnBridgeClickListener;
 
 public class BridgeListAdapter extends RecyclerView.Adapter<BridgeListAdapter.ViewHolder> {
 

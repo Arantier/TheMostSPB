@@ -1,4 +1,4 @@
-package ru.android_school.h_h.themostspb.View;
+package ru.android_school.h_h.themostspb.View.SelectorActivity;
 
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;

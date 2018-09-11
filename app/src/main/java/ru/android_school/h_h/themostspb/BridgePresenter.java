@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import io.reactivex.Single;
 import ru.android_school.h_h.themostspb.Model.Bridge;
 import ru.android_school.h_h.themostspb.Model.BridgeProvider;
-import ru.android_school.h_h.themostspb.View.BridgeInfoActivity;
-import ru.android_school.h_h.themostspb.View.BridgeSelectorActivity;
+import ru.android_school.h_h.themostspb.View.InfoActivity.BridgeInfoActivity;
+import ru.android_school.h_h.themostspb.View.SelectorActivity.BridgeSelectorActivity;
 
 public class BridgePresenter {
 

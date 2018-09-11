@@ -1,8 +1,7 @@
-package ru.android_school.h_h.themostspb.View;
+package ru.android_school.h_h.themostspb.View.InfoActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -11,16 +10,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
-import android.text.TextUtils;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.bumptech.glide.Glide;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
@@ -29,8 +20,9 @@ import ru.android_school.h_h.themostspb.BridgePresenter;
 import ru.android_school.h_h.themostspb.Model.Bridge;
 import ru.android_school.h_h.themostspb.Model.BridgeManager;
 import ru.android_school.h_h.themostspb.R;
+import ru.android_school.h_h.themostspb.View.BridgeView;
 
-public class BridgeInfoActivity extends AppCompatActivity {
+public class BridgeInfoActivity extends AppCompatActivity implements TimePickerDialog.OnNotificationStateChangeListener {
 
     public static final String ID_EXTRA = "id";
 
@@ -40,10 +32,25 @@ public class BridgeInfoActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private BridgeView bridgeView;
     private TextView infoText;
-    private Button notificationButton;
+    private View notificationButton;
     private View loadPlaceholder, errorPlaceholder;
 
     BridgePresenter presenter;
+
+    @Override
+    public void createNotificationAndRefreshButton(int minutesToCall) {
+        presenter.setNotification(id,minutesToCall);
+    }
+
+    @Override
+    public boolean getNotificationState() {
+        return BridgeManager.getNotificationState(id);
+    }
+
+    @Override
+    public void cancel() {
+
+    }
 
     private class PagerAdapter extends FragmentPagerAdapter{
 
@@ -126,13 +133,18 @@ public class BridgeInfoActivity extends AppCompatActivity {
                     public void accept(Bridge bridge) throws Exception {
                         loadPlaceholder.setVisibility(View.GONE);
                         errorPlaceholder.setVisibility(View.GONE);
+                        notificationButton.setVisibility(View.VISIBLE);
+
                         PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager(),bridge.bridgeConnectUrl,bridge.bridgeDivorseUrl);
                         viewPager.setAdapter(adapter);
+
                         bridgeView.setName(bridge.name);
                         bridgeView.setTimes(bridge.timeDivorse,bridge.timeConnect);
                         bridgeView.setDivorseState(BridgeManager.getDivorseState(bridge));
                         bridgeView.setNotificationState(BridgeManager.getNotificationState(bridge));
                         infoText.setText(Html.fromHtml(bridge.description));
+
+                        TextView notificationButtonText = notificationButton.findViewById(R.id.notificationButtonText);
                     }
                 }, new Consumer<Throwable>() {
                     @Override

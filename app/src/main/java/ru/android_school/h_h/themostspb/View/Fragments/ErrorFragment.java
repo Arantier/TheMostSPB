@@ -6,7 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import ru.android_school.h_h.themostspb.R;
-import ru.android_school.h_h.themostspb.View.OnErrorRefreshListener;
+import ru.android_school.h_h.themostspb.View.SelectorActivity.OnErrorRefreshListener;
 
 public class ErrorFragment extends Fragment {
 

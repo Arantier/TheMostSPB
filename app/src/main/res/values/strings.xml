@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">The Most SPB</string>
-    <string name="button_reminder">Напомнить</string>
+    <string name="button_reminder">НАПОМНИТЬ</string>
     <string name="dialogDescription">За сколько до закрытия моста вас предупредить?</string>
     <string name="dialogPositive">Ок</string>
     <string name="dialogNeutral">Отменить</string>
@@ -18,19 +18,19 @@
     <string name="permission_rationale_close">Хорошо</string>
     <!--Для минут-->
     <plurals name="minute_plurals">
-        <item quantity="zero">Напомнить</item>
-        <item quantity="one">за %d минуту</item>
-        <item quantity="two">за %d минуты</item>
-        <item quantity="few">за %d минуты</item>
-        <item quantity="many">за %d минут</item>
-        <item quantity="other">за %d минут</item>
+        <item quantity="zero">НАПОМНИТЬ</item>
+        <item quantity="one">ЗА %D МИНУТУ</item>
+        <item quantity="two">ЗА %D МИНУТЫ</item>
+        <item quantity="few">ЗА %D МИНУТЫ</item>
+        <item quantity="many">ЗА %D МИНУТ</item>
+        <item quantity="other">ЗА %D МИНУТ</item>
     </plurals>
     <plurals name="hours_plurals">
-        <item quantity="zero">Напомнить</item>
-        <item quantity="one">за %d час</item>
-        <item quantity="two">за %d часа</item>
-        <item quantity="few">за %d часа</item>
-        <item quantity="many">за %d часов</item>
-        <item quantity="other">за %d часов</item>
+        <item quantity="zero">НАПОМНИТЬ</item>
+        <item quantity="one">ЗА %D ЧАС</item>
+        <item quantity="two">ЗА %D ЧАСА</item>
+        <item quantity="few">ЗА %D ЧАСА</item>
+        <item quantity="many">ЗА %D ЧАСОВ</item>
+        <item quantity="other">ЗА %D ЧАСОВ</item>
     </plurals>
 </resources>
