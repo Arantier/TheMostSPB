@@ -11,9 +11,6 @@
         <item name="android:fontFamily">sans-serif</item>
         <item name="colorWhite">@color/white</item>
         <item name="colorBlack">@color/black</item>
-        <!--colorControlNormal controls the ‘normal’ state of components such as
-            an unselected EditText, and unselected Checkboxes and RadioButtons-->
-        <!--<item name="android:colorControlNormal">@color/colorPrimary</item>-->
         <item name="coordinatorLayoutStyle">@style/Widget.Support.CoordinatorLayout</item>
     </style>
 

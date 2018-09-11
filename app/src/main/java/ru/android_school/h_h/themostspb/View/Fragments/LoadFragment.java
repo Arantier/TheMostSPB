@@ -14,13 +14,7 @@ public class LoadFragment extends Fragment {
     }
 
     public static LoadFragment newInstance() {
-        LoadFragment fragment = new LoadFragment();
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        return new LoadFragment();
     }
 
     @Override

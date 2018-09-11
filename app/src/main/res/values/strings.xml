@@ -1,13 +1,10 @@
 <resources>
     <string name="app_name">The Most SPB</string>
-    <string name="button_reminder">НАПОМНИТЬ</string>
+    <string name="button_reminder">напомнить</string>
     <string name="dialogDescription">За сколько до закрытия моста вас предупредить?</string>
     <string name="dialogPositive">Ок</string>
     <string name="dialogNeutral">Отменить</string>
     <string name="dialogNegative">Назад</string>
-    <string name="notification_start">Вы просили напомнить о мосте </string>
-    <string name="notification_end"> до начала его развода</string>
-    <string name="notificationSet">Напоминание установлено</string>
     <!--Error fragment-->
     <string name="error_text">Возникла ошибка при загрузке данных</string>
     <string name="error_refresh">Обновить</string>
@@ -18,19 +15,19 @@
     <string name="permission_rationale_close">Хорошо</string>
     <!--Для минут-->
     <plurals name="minute_plurals">
-        <item quantity="zero">НАПОМНИТЬ</item>
-        <item quantity="one">ЗА %D МИНУТУ</item>
-        <item quantity="two">ЗА %D МИНУТЫ</item>
-        <item quantity="few">ЗА %D МИНУТЫ</item>
-        <item quantity="many">ЗА %D МИНУТ</item>
-        <item quantity="other">ЗА %D МИНУТ</item>
+        <item quantity="zero">Напомнить</item>
+        <item quantity="one">%d минуту</item>
+        <item quantity="two">%d минуты</item>
+        <item quantity="few">%d минуты</item>
+        <item quantity="many">%d минут</item>
+        <item quantity="other">%d минут</item>
     </plurals>
     <plurals name="hours_plurals">
-        <item quantity="zero">НАПОМНИТЬ</item>
-        <item quantity="one">ЗА %D ЧАС</item>
-        <item quantity="two">ЗА %D ЧАСА</item>
-        <item quantity="few">ЗА %D ЧАСА</item>
-        <item quantity="many">ЗА %D ЧАСОВ</item>
-        <item quantity="other">ЗА %D ЧАСОВ</item>
+        <item quantity="zero">Напомнить</item>
+        <item quantity="one">%d час</item>
+        <item quantity="two">%d часа</item>
+        <item quantity="few">%d часа</item>
+        <item quantity="many">%d часов</item>
+        <item quantity="other">%d часа</item>
     </plurals>
 </resources>

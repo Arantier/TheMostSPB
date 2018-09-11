@@ -10,12 +10,12 @@ import java.util.ArrayList;
 import ru.android_school.h_h.themostspb.Model.Bridge;
 import ru.android_school.h_h.themostspb.Model.BridgeManager;
 import ru.android_school.h_h.themostspb.View.BridgeView;
-import ru.android_school.h_h.themostspb.View.SelectorActivity.OnBridgeClickListener;
+import ru.android_school.h_h.themostspb.View.SelectorActivity.OnBridgeActionListener;
 
 public class BridgeListAdapter extends RecyclerView.Adapter<BridgeListAdapter.ViewHolder> {
 
     ArrayList<Bridge> listOfBridges;
-    OnBridgeClickListener listener;
+    OnBridgeActionListener listener;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -26,14 +26,13 @@ public class BridgeListAdapter extends RecyclerView.Adapter<BridgeListAdapter.Vi
             view = (BridgeView) itemView;
         }
 
-        public void bind(final Bridge bridge, final OnBridgeClickListener listener){
+        public void bind(final Bridge bridge, final OnBridgeActionListener listener){
             ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             view.setLayoutParams(lp);
             view.setName(bridge.name);
-            String[] times = new String[bridge.timeDivorse.length*2];
             view.setTimes(bridge.timeDivorse,bridge.timeConnect);
             view.setDivorseState(BridgeManager.getDivorseState(bridge));
-            view.setNotificationState(BridgeManager.getNotificationState(bridge));
+            view.setNotificationState(listener.getNotificationState(bridge.id));
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -60,7 +59,7 @@ public class BridgeListAdapter extends RecyclerView.Adapter<BridgeListAdapter.Vi
         return (listOfBridges!=null) ? listOfBridges.size() : 0;
     }
 
-    public BridgeListAdapter(ArrayList<Bridge> listOfBridges, OnBridgeClickListener listener) {
+    public BridgeListAdapter(ArrayList<Bridge> listOfBridges, OnBridgeActionListener listener) {
         this.listOfBridges = listOfBridges;
         this.listener = listener;
     }

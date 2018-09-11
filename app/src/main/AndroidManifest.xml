@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="ru.android_school.h_h.themostspb">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -14,16 +15,28 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".View.SelectorActivity.BridgeSelectorActivity">
+        <activity android:name=".View.SelectorActivity.BridgeSelectorActivity"
+            tools:ignore="InnerclassSeparator">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".View.InfoActivity.BridgeInfoActivity">
 
-        </activity>
+        <activity android:name=".View.InfoActivity.BridgeInfoActivity"
+            tools:ignore="InnerclassSeparator" />
+
+        <receiver
+            android:name=".View.NotificationReceiver"
+            android:enabled="true"
+            android:exported="true"
+            tools:ignore="InnerclassSeparator"
+            android:permission="">
+            <intent-filter>
+                <action android:name="ru.android_school.h_h.themostspb.NOTIFY_DIVORSE"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

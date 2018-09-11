@@ -5,7 +5,6 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.text.TextPaint;
@@ -169,18 +168,6 @@ public class BridgeView extends View {
 
     public void setName(String name) {
         this.name = name;
-        invalidate();
-        requestLayout();
-    }
-
-    public void setTimes(String[] intervals) {
-        times = "";
-        for (int i = 0; i < intervals.length / 2; i++) {
-            times += intervals[2 * i] + ":" + intervals[2 * i + 1];
-            if (intervals.length - i > 1) {
-                times += "\t";
-            }
-        }
         invalidate();
         requestLayout();
     }

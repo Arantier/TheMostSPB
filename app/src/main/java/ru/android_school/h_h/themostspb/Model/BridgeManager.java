@@ -1,35 +1,12 @@
 package ru.android_school.h_h.themostspb.Model;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
-
-import java.lang.reflect.Type;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Random;
 
 public class BridgeManager {
 
     public static final int BRIDGE_CONNECT = 0,
             BRIDGE_SOON = 1,
             BRIDGE_DIVORSE = 2;
-
-    public static String serialize(Bridge bridge){
-        Gson gson = new GsonBuilder()
-                .setPrettyPrinting()
-                .create();
-        return gson.toJson(bridge);
-    }
-
-    public static Bridge deserialize(String json){
-        return new Gson().fromJson(json, Bridge.class);
-    }
 
     public static int getDivorseState(Bridge bridge) {
         Calendar now = Calendar.getInstance();
@@ -67,8 +44,6 @@ public class BridgeManager {
         return divorse;
     }
 
-    //TODO:Где-то тут ошибка, исправь и проверь
-
     public static Calendar getClosestConnection(Bridge bridge){
         Calendar connection = Calendar.getInstance();
         Calendar now = Calendar.getInstance();
@@ -90,10 +65,5 @@ public class BridgeManager {
             }
         }
         return connection;
-    }
-
-    public static boolean getNotificationState(Bridge bridge){
-        //TODO:Тела метода ещё нет, только заглушка
-        return new Random().nextBoolean();
     }
 }

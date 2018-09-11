@@ -4,18 +4,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="false">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_height="wrap_content"
         android:layout_width="match_parent">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
-            android:layout_height="wrap_content"
+            android:layout_height="?attr/actionBarSize"
             android:layout_width="match_parent"
-            app:title="@string/app_name" />
+            android:layout_marginTop="@dimen/toolbar_margin"
+            app:titleTextColor="@color/white"
+            app:title="@string/app_name"/>
 
     </android.support.design.widget.AppBarLayout>
 

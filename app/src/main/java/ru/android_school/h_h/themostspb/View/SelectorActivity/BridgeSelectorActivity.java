@@ -20,12 +20,11 @@ import ru.android_school.h_h.themostspb.View.Fragments.List.ListFragment;
 import ru.android_school.h_h.themostspb.R;
 import ru.android_school.h_h.themostspb.View.Fragments.LoadFragment;
 
-public class BridgeSelectorActivity extends AppCompatActivity implements OnBridgeClickListener, OnErrorRefreshListener {
+public class BridgeSelectorActivity extends AppCompatActivity implements OnBridgeActionListener, OnErrorRefreshListener {
 
     public static final int LIST_MODE = 1,
             MAP_MODE = 2,
-            LOAD_MODE = 0,
-            ERROR_MODE = -1;
+            LOAD_MODE = 0;
 
     private int state = LOAD_MODE;
 
@@ -64,6 +63,7 @@ public class BridgeSelectorActivity extends AppCompatActivity implements OnBridg
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bridge_selector);
+        //Не уверен правильно ли я тут поступил, но для преференсов нужен контекст
         presenter = BridgePresenter.getInstance();
         toolbar = findViewById(R.id.toolbar);
         toolbar.inflateMenu(R.menu.menu_activity_selector);
@@ -81,6 +81,7 @@ public class BridgeSelectorActivity extends AppCompatActivity implements OnBridg
                     }
                 });
         fragmentContainer = findViewById(R.id.layout_fragment_container);
+        presenter.attachSelector(this);
     }
 
     @Override
@@ -88,7 +89,6 @@ public class BridgeSelectorActivity extends AppCompatActivity implements OnBridg
         super.onStart();
         loadFragment = LoadFragment.newInstance();
         errorFragment = ErrorFragment.newInstance(this);
-        presenter.attachSelector(this);
         if (listFragment == null) {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.layout_fragment_container, loadFragment)
@@ -99,8 +99,8 @@ public class BridgeSelectorActivity extends AppCompatActivity implements OnBridg
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onDestroy() {
+        super.onDestroy();
         presenter.detachSelector();
     }
 
@@ -136,6 +136,11 @@ public class BridgeSelectorActivity extends AppCompatActivity implements OnBridg
     @Override
     public void onBridgeClick(int id) {
         presenter.summonBridgeById(id);
+    }
+
+    @Override
+    public boolean getNotificationState(int id) {
+        return (presenter.getNotificationDelay(id)>0);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package ru.android_school.h_h.themostspb.View.InfoActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -39,17 +40,17 @@ public class BridgeInfoActivity extends AppCompatActivity implements TimePickerD
 
     @Override
     public void createNotificationAndRefreshButton(int minutesToCall) {
-        presenter.setNotification(id,minutesToCall);
+        presenter.createNotification(id,minutesToCall);
     }
 
     @Override
     public boolean getNotificationState() {
-        return BridgeManager.getNotificationState(id);
+        return (presenter.getNotificationDelay(id)>0);
     }
 
     @Override
     public void cancel() {
-
+        presenter.cancelNotification(id);
     }
 
     private class PagerAdapter extends FragmentPagerAdapter{
@@ -124,16 +125,36 @@ public class BridgeInfoActivity extends AppCompatActivity implements TimePickerD
         presenter.detachInfo();
     }
 
+    public void refreshStates() {
+        //Для обновления развода слишком много текста писать, а выхлопа 0. Ну нафиг.
+        bridgeView.setNotificationState(presenter.getNotificationDelay(id)>0);
+
+        TextView notificationButtonText = notificationButton.findViewById(R.id.notificationButtonText);
+        String reminderText = "за ";
+        int minutesToCall = presenter.getNotificationDelay(id);
+        if ((minutesToCall>0)&&(minutesToCall<60)) {
+            reminderText+=getResources().getQuantityString(R.plurals.minute_plurals,minutesToCall,minutesToCall);
+        } else if (minutesToCall>=60){
+            reminderText+=getResources().getQuantityString(R.plurals.hours_plurals,minutesToCall/60,minutesToCall/60);
+        } else {
+            reminderText = getResources().getString(R.string.button_reminder);
+        }
+        reminderText = reminderText.toUpperCase();
+        notificationButtonText.setText(reminderText);
+    }
+
     private void refreshBridge(){
         presenter.requestBridge(id)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Consumer<Bridge>() {
                     @Override
-                    public void accept(Bridge bridge) throws Exception {
+                    public void accept(final Bridge bridge) throws Exception {
                         loadPlaceholder.setVisibility(View.GONE);
                         errorPlaceholder.setVisibility(View.GONE);
                         notificationButton.setVisibility(View.VISIBLE);
+
+                        refreshStates();
 
                         PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager(),bridge.bridgeConnectUrl,bridge.bridgeDivorseUrl);
                         viewPager.setAdapter(adapter);
@@ -141,10 +162,17 @@ public class BridgeInfoActivity extends AppCompatActivity implements TimePickerD
                         bridgeView.setName(bridge.name);
                         bridgeView.setTimes(bridge.timeDivorse,bridge.timeConnect);
                         bridgeView.setDivorseState(BridgeManager.getDivorseState(bridge));
-                        bridgeView.setNotificationState(BridgeManager.getNotificationState(bridge));
                         infoText.setText(Html.fromHtml(bridge.description));
 
-                        TextView notificationButtonText = notificationButton.findViewById(R.id.notificationButtonText);
+                        {
+                            notificationButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    TimePickerDialog.newInstance(bridge.name,BridgeInfoActivity.this)
+                                            .show(getSupportFragmentManager(),"timePickerDialog");
+                                }
+                            });
+                        }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
