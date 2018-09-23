@@ -10,12 +10,12 @@ import java.util.ArrayList;
 import ru.android_school.h_h.themostspb.Model.Bridge;
 import ru.android_school.h_h.themostspb.Model.BridgeManager;
 import ru.android_school.h_h.themostspb.View.BridgeView;
-import ru.android_school.h_h.themostspb.View.SelectorActivity.OnBridgeActionListener;
+import ru.android_school.h_h.themostspb.View.SelectorActivity.ActivityCallback;
 
 public class BridgeListAdapter extends RecyclerView.Adapter<BridgeListAdapter.ViewHolder> {
 
     ArrayList<Bridge> listOfBridges;
-    OnBridgeActionListener listener;
+    ActivityCallback listener;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -26,7 +26,7 @@ public class BridgeListAdapter extends RecyclerView.Adapter<BridgeListAdapter.Vi
             view = (BridgeView) itemView;
         }
 
-        public void bind(final Bridge bridge, final OnBridgeActionListener listener){
+        public void bind(final Bridge bridge, final ActivityCallback listener){
             ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             view.setLayoutParams(lp);
             view.setName(bridge.name);
@@ -59,7 +59,7 @@ public class BridgeListAdapter extends RecyclerView.Adapter<BridgeListAdapter.Vi
         return (listOfBridges!=null) ? listOfBridges.size() : 0;
     }
 
-    public BridgeListAdapter(ArrayList<Bridge> listOfBridges, OnBridgeActionListener listener) {
+    public BridgeListAdapter(ArrayList<Bridge> listOfBridges, ActivityCallback listener) {
         this.listOfBridges = listOfBridges;
         this.listener = listener;
     }

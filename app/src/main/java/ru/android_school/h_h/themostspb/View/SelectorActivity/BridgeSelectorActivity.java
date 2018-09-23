@@ -1,10 +1,16 @@
 package ru.android_school.h_h.themostspb.View.SelectorActivity;
 
-import android.support.v4.app.FragmentTransaction;
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.FrameLayout;
 
 import java.util.ArrayList;
@@ -19,43 +25,52 @@ import ru.android_school.h_h.themostspb.View.Fragments.ErrorFragment;
 import ru.android_school.h_h.themostspb.View.Fragments.List.ListFragment;
 import ru.android_school.h_h.themostspb.R;
 import ru.android_school.h_h.themostspb.View.Fragments.LoadFragment;
+import ru.android_school.h_h.themostspb.View.Fragments.MapFragment;
 
-public class BridgeSelectorActivity extends AppCompatActivity implements OnBridgeActionListener, OnErrorRefreshListener {
+public class BridgeSelectorActivity extends AppCompatActivity implements ActivityCallback, OnErrorRefreshListener {
 
-    public static final int LIST_MODE = 1,
-            MAP_MODE = 2,
-            LOAD_MODE = 0;
+    public static final int LIST_MODE = 0,
+            MAP_MODE = 1;
+    private static final String MODE_KEY = "mode_key";
+    private static final String PERMISSION_KEY = "perm_key";
 
-    private int state = LOAD_MODE;
+    public static final int FINE_LOCATION = 2;
+
+    int mode;
 
     private BridgePresenter presenter;
 
     private Toolbar toolbar;
     private FrameLayout fragmentContainer;
 
-    int SWITCH_LIST = 1, SWITCH_MAP = 2;
-    boolean switchButtonBlockade = true;
-    int mode = SWITCH_LIST;
 
     private ListFragment listFragment;
-    //    private MapFragment mapFragment;
+    private MapFragment mapFragment;
     private LoadFragment loadFragment;
     private ErrorFragment errorFragment;
 
-    private void switchButtonBlock(boolean blockButton) {
-        toolbar.getMenu().findItem(R.id.menu_toolbar_switch).setEnabled(!blockButton);
+    private boolean locationPermission = false;
+
+    private void setSwitchEnabled(boolean blockButton) {
+        toolbar.getMenu().findItem(R.id.menu_toolbar_switch).setEnabled(blockButton);
     }
 
     private void setMode(int mode) {
         this.mode = mode;
-        if (mode == SWITCH_LIST) {
+        if (mode == LIST_MODE) {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.layout_fragment_container, listFragment)
                     .commit();
+            toolbar.getMenu()
+                    .findItem(R.id.menu_toolbar_switch)
+                    .setIcon(R.drawable.ic_baseline_map_24_px);
         } else {
-//            getSupportFragmentManager().beginTransaction()
-//                    .replace(R.id.layout_fragment_container,mapFragment)
-//                    .commit();
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.layout_fragment_container, mapFragment)
+                    .commit();
+            toolbar.getMenu()
+                    .findItem(R.id.menu_toolbar_switch)
+                    .setIcon(R.drawable.ic_list);
         }
     }
 
@@ -63,6 +78,12 @@ public class BridgeSelectorActivity extends AppCompatActivity implements OnBridg
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bridge_selector);
+
+        if (savedInstanceState!=null) {
+            mode = savedInstanceState.getInt(MODE_KEY);
+            locationPermission = savedInstanceState.getBoolean(PERMISSION_KEY);
+        }
+
         //Не уверен правильно ли я тут поступил, но для преференсов нужен контекст
         presenter = BridgePresenter.getInstance();
         toolbar = findViewById(R.id.toolbar);
@@ -82,20 +103,31 @@ public class BridgeSelectorActivity extends AppCompatActivity implements OnBridg
                 });
         fragmentContainer = findViewById(R.id.layout_fragment_container);
         presenter.attachSelector(this);
-    }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
         loadFragment = LoadFragment.newInstance();
         errorFragment = ErrorFragment.newInstance(this);
         if (listFragment == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.layout_fragment_container, loadFragment)
+                    .replace(R.id.layout_fragment_container, loadFragment)
                     .commit();
-            switchButtonBlock(true);
+            setSwitchEnabled(false);
             presenter.requestAllBridges();
+        } else {
+            setSwitchEnabled(true);
         }
+    }
+
+    @Override
+    protected void onStart() {
+        presenter.attachSelector(this);
+        super.onStart();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(MODE_KEY,mode);
+        outState.putBoolean(PERMISSION_KEY,locationPermission);
     }
 
     @Override
@@ -111,21 +143,15 @@ public class BridgeSelectorActivity extends AppCompatActivity implements OnBridg
                     @Override
                     public void accept(ArrayList<Bridge> bridges) throws Exception {
                         listFragment = ListFragment.newInstance(bridges, BridgeSelectorActivity.this);
-                        //mapFragment = MapFragment.newInstance(bridges,this);
-                        switchButtonBlock(false);
-                        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                        if (mode == LIST_MODE) {
-                            ft.replace(R.id.layout_fragment_container, listFragment);
-                        } else {
-//                    ft.replace(R.id.layout_fragment_container,mapFragment);
-                        }
-                        ft.commit();
+                        mapFragment = MapFragment.newInstance(bridges, BridgeSelectorActivity.this);
+                        setSwitchEnabled(true);
+                        setMode(mode);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         throwable.printStackTrace();
-                        switchButtonBlock(true);
+                        setSwitchEnabled(false);
                         getSupportFragmentManager().beginTransaction()
                                 .replace(R.id.layout_fragment_container, errorFragment)
                                 .commit();
@@ -140,15 +166,70 @@ public class BridgeSelectorActivity extends AppCompatActivity implements OnBridg
 
     @Override
     public boolean getNotificationState(int id) {
-        return (presenter.getNotificationDelay(id)>0);
+        return (presenter.getNotificationDelay(id) > 0);
+    }
+
+    private void showSnackbar(final int mainTextStringId, final int actionStringId,
+                              View.OnClickListener listener) {
+        Snackbar.make(
+                findViewById(android.R.id.content),
+                getString(mainTextStringId),
+                Snackbar.LENGTH_INDEFINITE)
+                .setAction(getString(actionStringId), listener).show();
+    }
+
+    @Override
+    public void requestUserLocation() {
+        if (!locationPermission) {
+            Log.d("Location", "Requesting location");
+            boolean shouldProvideRationale =
+                    ActivityCompat.shouldShowRequestPermissionRationale(this,
+                            Manifest.permission.ACCESS_FINE_LOCATION);
+
+            if (shouldProvideRationale) {
+                showSnackbar(R.string.permission_rationale_message,
+                        android.R.string.ok, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                ActivityCompat.requestPermissions(BridgeSelectorActivity.this,
+                                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                                        FINE_LOCATION);
+                            }
+                        });
+            } else {
+                ActivityCompat.requestPermissions(BridgeSelectorActivity.this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        FINE_LOCATION);
+            }
+        } else {
+
+        }
     }
 
     @Override
     public void onErrorRefresh() {
-        switchButtonBlock(true);
+        setSwitchEnabled(true);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.layout_fragment_container, loadFragment)
                 .commit();
         presenter.requestAllBridges();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        Log.d("Location", "Request received");
+        if (requestCode == FINE_LOCATION) {
+            Log.d("Location", "Request asking for fine location");
+            if (grantResults.length > 0 && (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                Log.d("Location", "Permission granted");
+                locationPermission = true;
+                LocationProvider locationProvider = new LocationProvider(this);
+                mapFragment.registerLocationProvider(locationProvider);
+            } else {
+                Log.d("Location", "Permission denied");
+                locationPermission = false;
+                mapFragment.registerLocationProvider(null);
+            }
+        }
     }
 }

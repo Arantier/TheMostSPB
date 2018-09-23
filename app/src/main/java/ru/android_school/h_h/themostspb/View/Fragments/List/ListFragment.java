@@ -14,11 +14,11 @@ import java.util.ArrayList;
 
 import ru.android_school.h_h.themostspb.Model.Bridge;
 import ru.android_school.h_h.themostspb.R;
-import ru.android_school.h_h.themostspb.View.SelectorActivity.OnBridgeActionListener;
+import ru.android_school.h_h.themostspb.View.SelectorActivity.ActivityCallback;
 
 public class ListFragment extends Fragment {
 
-    OnBridgeActionListener listener;
+    ActivityCallback listener;
     ArrayList<Bridge> listOfBridges;
 
     RecyclerView recyclerView;
@@ -34,7 +34,7 @@ public class ListFragment extends Fragment {
         return view;
     }
 
-    public static ListFragment newInstance(ArrayList<Bridge> bridges, OnBridgeActionListener listener) {
+    public static ListFragment newInstance(ArrayList<Bridge> bridges, ActivityCallback listener) {
         ListFragment instance = new ListFragment();
         instance.listener = listener;
         instance.listOfBridges = bridges;
