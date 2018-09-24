@@ -7,7 +7,6 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:colorForeground">@color/white</item>
         <item name="android:fontFamily">sans-serif</item>
         <item name="colorWhite">@color/white</item>
         <item name="colorBlack">@color/black</item>

@@ -32,24 +32,17 @@ public class BridgeSelectorActivity extends AppCompatActivity implements Activit
     public static final int LIST_MODE = 0,
             MAP_MODE = 1;
     private static final String MODE_KEY = "mode_key";
-    private static final String PERMISSION_KEY = "perm_key";
-
-    public static final int FINE_LOCATION = 2;
 
     int mode;
 
     private BridgePresenter presenter;
 
     private Toolbar toolbar;
-    private FrameLayout fragmentContainer;
-
 
     private ListFragment listFragment;
     private MapFragment mapFragment;
     private LoadFragment loadFragment;
     private ErrorFragment errorFragment;
-
-    private boolean locationPermission = false;
 
     private void setSwitchEnabled(boolean blockButton) {
         toolbar.getMenu().findItem(R.id.menu_toolbar_switch).setEnabled(blockButton);
@@ -81,7 +74,6 @@ public class BridgeSelectorActivity extends AppCompatActivity implements Activit
 
         if (savedInstanceState!=null) {
             mode = savedInstanceState.getInt(MODE_KEY);
-            locationPermission = savedInstanceState.getBoolean(PERMISSION_KEY);
         }
 
         //Не уверен правильно ли я тут поступил, но для преференсов нужен контекст
@@ -101,7 +93,6 @@ public class BridgeSelectorActivity extends AppCompatActivity implements Activit
                         return true;
                     }
                 });
-        fragmentContainer = findViewById(R.id.layout_fragment_container);
         presenter.attachSelector(this);
 
         loadFragment = LoadFragment.newInstance();
@@ -127,7 +118,6 @@ public class BridgeSelectorActivity extends AppCompatActivity implements Activit
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(MODE_KEY,mode);
-        outState.putBoolean(PERMISSION_KEY,locationPermission);
     }
 
     @Override
@@ -179,34 +169,6 @@ public class BridgeSelectorActivity extends AppCompatActivity implements Activit
     }
 
     @Override
-    public void requestUserLocation() {
-        if (!locationPermission) {
-            Log.d("Location", "Requesting location");
-            boolean shouldProvideRationale =
-                    ActivityCompat.shouldShowRequestPermissionRationale(this,
-                            Manifest.permission.ACCESS_FINE_LOCATION);
-
-            if (shouldProvideRationale) {
-                showSnackbar(R.string.permission_rationale_message,
-                        android.R.string.ok, new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                ActivityCompat.requestPermissions(BridgeSelectorActivity.this,
-                                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                                        FINE_LOCATION);
-                            }
-                        });
-            } else {
-                ActivityCompat.requestPermissions(BridgeSelectorActivity.this,
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        FINE_LOCATION);
-            }
-        } else {
-
-        }
-    }
-
-    @Override
     public void onErrorRefresh() {
         setSwitchEnabled(true);
         getSupportFragmentManager().beginTransaction()
@@ -215,21 +177,4 @@ public class BridgeSelectorActivity extends AppCompatActivity implements Activit
         presenter.requestAllBridges();
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        Log.d("Location", "Request received");
-        if (requestCode == FINE_LOCATION) {
-            Log.d("Location", "Request asking for fine location");
-            if (grantResults.length > 0 && (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                Log.d("Location", "Permission granted");
-                locationPermission = true;
-                LocationProvider locationProvider = new LocationProvider(this);
-                mapFragment.registerLocationProvider(locationProvider);
-            } else {
-                Log.d("Location", "Permission denied");
-                locationPermission = false;
-                mapFragment.registerLocationProvider(null);
-            }
-        }
-    }
 }

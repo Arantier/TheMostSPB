@@ -1,21 +1,37 @@
 package ru.android_school.h_h.themostspb.View.Fragments;
 
+import android.Manifest;
+import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
 import android.os.Bundle;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.CoordinatorLayout;
+import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.LocationSource;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
@@ -24,6 +40,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
 
@@ -32,21 +49,35 @@ import ru.android_school.h_h.themostspb.Model.BridgeManager;
 import ru.android_school.h_h.themostspb.R;
 import ru.android_school.h_h.themostspb.View.BridgeView;
 import ru.android_school.h_h.themostspb.View.SelectorActivity.ActivityCallback;
-import ru.android_school.h_h.themostspb.View.SelectorActivity.LocationProvider;
 
-public class MapFragment extends SupportMapFragment {
+public class MapFragment extends SupportMapFragment implements LocationSource {
 
     private static LatLng focusPoint = new LatLng(59.944196, 30.306196);
 
     ArrayList<Bridge> listOfBridges;
     ActivityCallback listener;
 
+    public static final int FINE_LOCATION = 2;
+
+    private static int DESIRED_REQUEST_INTERVAL = 10000;
+    private static int FASTEST_REQUEST_INTERVAL = DESIRED_REQUEST_INTERVAL / 2;
+
     FrameLayout mainLayout;
     BridgeView bridgeView;
 
-    LocationProvider locationProvider;
+    boolean requestingLocationUpdates;
+
+    private static final String KEY_REQUEST_LOCATION_UPDATES = "key_rlu";
+
+    FusedLocationProviderClient fusedClient;
+    SettingsClient settingsClient;
+    LocationRequest locationRequest;
+    LocationSettingsRequest locationSettingsRequest;
+    LocationCallback locationCallback;
+    OnLocationChangedListener onLocationChangedListener;
 
     GoogleMap map;
+    Location currentLocation;
 
     public static MapFragment newInstance(ArrayList<Bridge> bridges, ActivityCallback listener) {
         MapFragment newInstance = new MapFragment();
@@ -61,11 +92,22 @@ public class MapFragment extends SupportMapFragment {
         View mapFragment = super.onCreateView(inflater, container, savedInstanceState);
         mainLayout = new FrameLayout(getContext());
         mainLayout.addView(mapFragment);
+        boolean locationPermission = (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED);
+
+        if (locationPermission) {
+            initUserLocationServices();
+            if (savedInstanceState != null) {
+                requestingLocationUpdates = savedInstanceState.getBoolean(KEY_REQUEST_LOCATION_UPDATES);
+            } else {
+                requestingLocationUpdates = false;
+            }
+        }
+
         getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap googleMap) {
                 map = googleMap;
-                map.setMinZoomPreference(10);
                 map.getUiSettings().setMapToolbarEnabled(false);
                 CameraPosition cameraPosition = new CameraPosition.Builder()
                         .target(focusPoint)
@@ -112,10 +154,36 @@ public class MapFragment extends SupportMapFragment {
                         disableBridgeBar();
                     }
                 });
-                listener.requestUserLocation();
+                if (fusedClient != null) {
+                    map.setLocationSource(MapFragment.this);
+                } else {
+                    requestUserPermission();
+                }
             }
         });
         return mainLayout;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if ((fusedClient != null) && (!requestingLocationUpdates)) {
+            startLocationUpdates();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if ((fusedClient != null) && (!requestingLocationUpdates)) {
+            stopLocationUpdates();
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle bundle) {
+        super.onSaveInstanceState(bundle);
+        bundle.putBoolean(KEY_REQUEST_LOCATION_UPDATES, requestingLocationUpdates);
     }
 
     private BitmapDescriptor getMarkerIconFromDrawable(Drawable drawable) {
@@ -153,28 +221,113 @@ public class MapFragment extends SupportMapFragment {
         bridgeView = null;
     }
 
-    public void registerLocationProvider(LocationProvider newLocationProvider) {
-        locationProvider = newLocationProvider;
-//        map.setLocationSource(locationProvider);
-//        if (locationProvider != null) {
-//            locationProvider.startLocationUpdates();
-//        }
-        map.setMyLocationEnabled(true);
+    private void initUserLocationServices() {
+        fusedClient = LocationServices.getFusedLocationProviderClient(getActivity());
+        settingsClient = LocationServices.getSettingsClient(getActivity());
+
+        createLocationRequest();
+        createLocationCallback();
+        buildLocationSettingsRequest();
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (locationProvider != null) {
-            locationProvider.startLocationUpdates();
+    private void createLocationRequest() {
+        locationRequest = new LocationRequest();
+        locationRequest.setInterval(DESIRED_REQUEST_INTERVAL);
+        locationRequest.setFastestInterval(FASTEST_REQUEST_INTERVAL);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+    }
+
+    private void createLocationCallback() {
+        locationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                super.onLocationResult(locationResult);
+                currentLocation = locationResult.getLastLocation();
+                if (!map.isMyLocationEnabled()) {
+                    map.setMyLocationEnabled(true);
+                }
+                onLocationChangedListener.onLocationChanged(currentLocation);
+            }
+        };
+    }
+
+    private void buildLocationSettingsRequest() {
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
+        builder.addLocationRequest(locationRequest);
+        locationSettingsRequest = builder.build();
+    }
+
+    private void startLocationUpdates() {
+        settingsClient.checkLocationSettings(locationSettingsRequest)
+                .addOnSuccessListener(new OnSuccessListener<LocationSettingsResponse>() {
+                    @Override
+                    public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
+                        fusedClient.requestLocationUpdates(locationRequest,
+                                locationCallback, Looper.myLooper());
+                        map.setLocationSource(MapFragment.this);
+                        requestingLocationUpdates = true;
+                    }
+                });
+    }
+
+    private void stopLocationUpdates() {
+        fusedClient.removeLocationUpdates(locationCallback)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        map.setMyLocationEnabled(false);
+                        map.setLocationSource(null);
+                        requestingLocationUpdates = false;
+                    }
+                });
+    }
+
+    private void requestUserPermission() {
+        Log.d("Location", "Requesting location");
+        boolean shouldProvideRationale = shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION);
+
+        if (shouldProvideRationale) {
+            AlertDialog rationaleDialog;
+            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
+            dialogBuilder.setTitle(getString(R.string.permission_rationale_title))
+                    .setMessage(getString(R.string.permission_rationale_message))
+                    .setPositiveButton(getString(R.string.permission_rationale_close), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                                    FINE_LOCATION);
+                        }
+                    });
+            rationaleDialog = dialogBuilder.create();
+            rationaleDialog.show();
+        } else {
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    FINE_LOCATION);
         }
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        if (locationProvider != null) {
-            locationProvider.stopLocationUpdates();
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        Log.d("Location", "Request received");
+        if (requestCode == FINE_LOCATION) {
+            Log.d("Location", "Request asking for fine location");
+            if (grantResults.length > 0 && (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                Log.d("Location", "Permission granted");
+                initUserLocationServices();
+                startLocationUpdates();
+            } else {
+                Log.d("Location", "Permission denied");
+            }
         }
+    }
+
+    @Override
+    public void activate(OnLocationChangedListener onLocationChangedListener) {
+        this.onLocationChangedListener = onLocationChangedListener;
+    }
+
+    @Override
+    public void deactivate() {
+        this.onLocationChangedListener = null;
     }
 }

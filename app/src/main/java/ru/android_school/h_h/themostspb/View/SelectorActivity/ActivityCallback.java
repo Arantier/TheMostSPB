@@ -6,6 +6,4 @@ public interface ActivityCallback {
 
     public boolean getNotificationState(int id);
 
-    public void requestUserLocation();
-
 }

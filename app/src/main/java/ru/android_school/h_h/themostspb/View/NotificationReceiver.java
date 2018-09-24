@@ -39,7 +39,7 @@ public class NotificationReceiver extends BroadcastReceiver {
                     String mins = context.getResources().getQuantityString(R.plurals.minute_plurals, minutesToCall, minutesToCall);
                     notificationText += mins;
                 } else {
-                    String hours = context.getResources().getQuantityString(R.plurals.hours_plurals, minutesToCall, minutesToCall);
+                    String hours = context.getResources().getQuantityString(R.plurals.hours_plurals, minutesToCall/60, minutesToCall/60);
                     notificationText += hours;
                 }
 
