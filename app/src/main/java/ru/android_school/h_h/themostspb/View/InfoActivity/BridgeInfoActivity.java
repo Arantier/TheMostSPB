@@ -1,6 +1,5 @@
 package ru.android_school.h_h.themostspb.View.InfoActivity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -149,7 +148,7 @@ public class BridgeInfoActivity extends AppCompatActivity implements TimePickerD
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Consumer<Bridge>() {
                     @Override
-                    public void accept(final Bridge bridge) throws Exception {
+                    public void accept(final Bridge bridge) {
                         loadPlaceholder.setVisibility(View.GONE);
                         errorPlaceholder.setVisibility(View.GONE);
                         notificationButton.setVisibility(View.VISIBLE);
@@ -176,7 +175,7 @@ public class BridgeInfoActivity extends AppCompatActivity implements TimePickerD
                     }
                 }, new Consumer<Throwable>() {
                     @Override
-                    public void accept(Throwable throwable) throws Exception {
+                    public void accept(Throwable throwable) {
                         loadPlaceholder.setVisibility(View.GONE);
                         errorPlaceholder.setVisibility(View.VISIBLE);
                         notificationButton.setVisibility(View.GONE);

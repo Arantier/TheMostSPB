@@ -1,17 +1,9 @@
 package ru.android_school.h_h.themostspb.View.SelectorActivity;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.FrameLayout;
 
 import java.util.ArrayList;
 
@@ -56,14 +48,14 @@ public class BridgeSelectorActivity extends AppCompatActivity implements Activit
                     .commit();
             toolbar.getMenu()
                     .findItem(R.id.menu_toolbar_switch)
-                    .setIcon(R.drawable.ic_baseline_map_24_px);
+                    .setIcon(R.drawable.selector_toolbar_map);
         } else {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.layout_fragment_container, mapFragment)
                     .commit();
             toolbar.getMenu()
                     .findItem(R.id.menu_toolbar_switch)
-                    .setIcon(R.drawable.ic_list);
+                    .setIcon(R.drawable.selector_toolbar_list);
         }
     }
 
@@ -76,7 +68,6 @@ public class BridgeSelectorActivity extends AppCompatActivity implements Activit
             mode = savedInstanceState.getInt(MODE_KEY);
         }
 
-        //Не уверен правильно ли я тут поступил, но для преференсов нужен контекст
         presenter = BridgePresenter.getInstance();
         toolbar = findViewById(R.id.toolbar);
         toolbar.inflateMenu(R.menu.menu_activity_selector);
@@ -131,7 +122,7 @@ public class BridgeSelectorActivity extends AppCompatActivity implements Activit
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Consumer<ArrayList<Bridge>>() {
                     @Override
-                    public void accept(ArrayList<Bridge> bridges) throws Exception {
+                    public void accept(ArrayList<Bridge> bridges) {
                         listFragment = ListFragment.newInstance(bridges, BridgeSelectorActivity.this);
                         mapFragment = MapFragment.newInstance(bridges, BridgeSelectorActivity.this);
                         setSwitchEnabled(true);
@@ -139,7 +130,7 @@ public class BridgeSelectorActivity extends AppCompatActivity implements Activit
                     }
                 }, new Consumer<Throwable>() {
                     @Override
-                    public void accept(Throwable throwable) throws Exception {
+                    public void accept(Throwable throwable) {
                         throwable.printStackTrace();
                         setSwitchEnabled(false);
                         getSupportFragmentManager().beginTransaction()
@@ -157,15 +148,6 @@ public class BridgeSelectorActivity extends AppCompatActivity implements Activit
     @Override
     public boolean getNotificationState(int id) {
         return (presenter.getNotificationDelay(id) > 0);
-    }
-
-    private void showSnackbar(final int mainTextStringId, final int actionStringId,
-                              View.OnClickListener listener) {
-        Snackbar.make(
-                findViewById(android.R.id.content),
-                getString(mainTextStringId),
-                Snackbar.LENGTH_INDEFINITE)
-                .setAction(getString(actionStringId), listener).show();
     }
 
     @Override

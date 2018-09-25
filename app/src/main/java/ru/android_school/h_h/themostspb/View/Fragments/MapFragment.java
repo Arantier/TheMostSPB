@@ -1,7 +1,10 @@
 package ru.android_school.h_h.themostspb.View.Fragments;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -20,7 +23,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -28,6 +34,7 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -40,6 +47,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
@@ -52,6 +60,7 @@ import ru.android_school.h_h.themostspb.View.SelectorActivity.ActivityCallback;
 
 public class MapFragment extends SupportMapFragment implements LocationSource {
 
+    private static final int REQUEST_CHECK_SETTINGS = 0x12;
     private static LatLng focusPoint = new LatLng(59.944196, 30.306196);
 
     ArrayList<Bridge> listOfBridges;
@@ -155,7 +164,7 @@ public class MapFragment extends SupportMapFragment implements LocationSource {
                     }
                 });
                 if (fusedClient != null) {
-                    map.setLocationSource(MapFragment.this);
+                    startLocationUpdates();
                 } else {
                     requestUserPermission();
                 }
@@ -167,7 +176,7 @@ public class MapFragment extends SupportMapFragment implements LocationSource {
     @Override
     public void onResume() {
         super.onResume();
-        if ((fusedClient != null) && (!requestingLocationUpdates)) {
+        if ((fusedClient != null) && (requestingLocationUpdates)) {
             startLocationUpdates();
         }
     }
@@ -175,9 +184,7 @@ public class MapFragment extends SupportMapFragment implements LocationSource {
     @Override
     public void onPause() {
         super.onPause();
-        if ((fusedClient != null) && (!requestingLocationUpdates)) {
-            stopLocationUpdates();
-        }
+        stopLocationUpdates();
     }
 
     @Override
@@ -242,6 +249,7 @@ public class MapFragment extends SupportMapFragment implements LocationSource {
             @Override
             public void onLocationResult(LocationResult locationResult) {
                 super.onLocationResult(locationResult);
+                Log.d("Location", "Asking for location");
                 currentLocation = locationResult.getLastLocation();
                 if (!map.isMyLocationEnabled()) {
                     map.setMyLocationEnabled(true);
@@ -264,13 +272,46 @@ public class MapFragment extends SupportMapFragment implements LocationSource {
                     public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
                         fusedClient.requestLocationUpdates(locationRequest,
                                 locationCallback, Looper.myLooper());
+                        Toast.makeText(getContext(), "Идёт запрос местоположения...", Toast.LENGTH_SHORT)
+                                .show();
                         map.setLocationSource(MapFragment.this);
                         requestingLocationUpdates = true;
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        int statusCode = ((ApiException) e).getStatusCode();
+                        switch (statusCode) {
+                            case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                                Log.i("Location", "Location settings are not satisfied. Attempting to upgrade " +
+                                        "location settings ");
+                                try {
+                                    // Show the dialog by calling startResolutionForResult(), and check the
+                                    // result in onActivityResult().
+                                    ResolvableApiException rae = (ResolvableApiException) e;
+                                    startIntentSenderForResult(rae.getResolution().getIntentSender(), REQUEST_CHECK_SETTINGS, null, 0, 0, 0, null);
+                                } catch (IntentSender.SendIntentException sie) {
+                                    Log.i("Location", "PendingIntent unable to execute request.");
+                                }
+                                break;
+                            case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                                String errorMessage = "Location settings are inadequate, and cannot be " +
+                                        "fixed here. Fix in Settings.";
+                                Log.e("Location", errorMessage);
+                                Toast.makeText(getContext(), errorMessage, Toast.LENGTH_LONG).show();
+                                requestingLocationUpdates = false;
+                        }
+
                     }
                 });
     }
 
     private void stopLocationUpdates() {
+        if (!requestingLocationUpdates) {
+            return;
+        }
+
         fusedClient.removeLocationUpdates(locationCallback)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -318,6 +359,24 @@ public class MapFragment extends SupportMapFragment implements LocationSource {
             } else {
                 Log.d("Location", "Permission denied");
             }
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case REQUEST_CHECK_SETTINGS:
+                switch (resultCode) {
+                    case Activity.RESULT_OK:
+                        Log.i("Location", "User agreed to make required location settings changes.");
+                        requestingLocationUpdates = true;
+                        break;
+                    case Activity.RESULT_CANCELED:
+                        Log.i("Location", "User chose not to make required location settings changes.");
+                        requestingLocationUpdates = false;
+                        break;
+                }
+                break;
         }
     }
 

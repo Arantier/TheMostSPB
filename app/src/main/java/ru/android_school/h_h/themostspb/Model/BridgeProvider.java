@@ -1,7 +1,5 @@
 package ru.android_school.h_h.themostspb.Model;
 
-import android.content.SharedPreferences;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -40,7 +38,6 @@ public class BridgeProvider {
 
                 bridge.name = rawBridge.get("name").getAsString();
                 bridge.description = rawBridge.get("description").getAsString();
-                //TODO:Что за бред то, надо удостовериться в правильности фоток
                 bridge.bridgeDivorseUrl = rawBridge.get("photo_open").getAsString();
                 bridge.bridgeConnectUrl = rawBridge.get("photo_close").getAsString();
 

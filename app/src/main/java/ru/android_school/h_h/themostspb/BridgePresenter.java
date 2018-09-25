@@ -84,12 +84,12 @@ public class BridgePresenter {
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Consumer<Bridge>() {
                     @Override
-                    public void accept(Bridge bridge) throws Exception {
+                    public void accept(Bridge bridge) {
                         launchNotification(bridge, minutesToCall);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
-                    public void accept(Throwable throwable) throws Exception {
+                    public void accept(Throwable throwable) {
                         throwable.printStackTrace();
                     }
                 });

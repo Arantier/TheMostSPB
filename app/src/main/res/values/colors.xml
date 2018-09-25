@@ -3,7 +3,6 @@
     <color name="colorPrimary">#3de095</color>
     <color name="colorPrimaryDark">#31ad71</color>
     <color name="transparentStatusBarColor">#14000000</color>
-    <color name="transparent">#00ffffff</color>
     <color name="colorAccent">#3de095</color>
     <color name="textColorPrimary">#de000000</color>
     <color name="textColorSecondary">#6e6e6e</color>
