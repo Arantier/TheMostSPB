@@ -1,4 +1,4 @@
-package ru.android_school.h_h.themostspb.View.InfoActivity;
+package ru.android_school.h_h.themostspb.InfoPage.InfoActivity;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -47,7 +47,11 @@ public class TimePickerDialog extends DialogFragment {
         title = dialogView.findViewById(R.id.title);
         title.setText(bridgeName);
         NumberPicker numberPicker = dialogView.findViewById(R.id.numberPicker);
-        String times[] = {"15 мин", "30 мин", "45 мин", "1 час", "2 часа"};
+        String times[] = {getString(R.string.string_times_15mins),
+                getString(R.string.string_times_30mins),
+                getString(R.string.string_times_45mins),
+                getString(R.string.string_times_1h),
+                getString(R.string.string_times_2h)};
         numberPicker.setMinValue(0);
         numberPicker.setMaxValue(times.length - 1);
         numberPicker.setDisplayedValues(times);

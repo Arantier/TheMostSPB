@@ -1,4 +1,4 @@
-package ru.android_school.h_h.themostspb.View.Fragments;
+package ru.android_school.h_h.themostspb.BridgeSelector.Fragments;
 
 import android.Manifest;
 import android.app.Activity;
@@ -55,8 +55,8 @@ import java.util.ArrayList;
 import ru.android_school.h_h.themostspb.Model.Bridge;
 import ru.android_school.h_h.themostspb.Model.BridgeManager;
 import ru.android_school.h_h.themostspb.R;
-import ru.android_school.h_h.themostspb.View.BridgeView;
-import ru.android_school.h_h.themostspb.View.SelectorActivity.ActivityCallback;
+import ru.android_school.h_h.themostspb.BridgeView;
+import ru.android_school.h_h.themostspb.BridgeSelector.SelectorActivity.ActivityCallback;
 
 public class MapFragment extends SupportMapFragment implements LocationSource {
 
@@ -272,7 +272,7 @@ public class MapFragment extends SupportMapFragment implements LocationSource {
                     public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
                         fusedClient.requestLocationUpdates(locationRequest,
                                 locationCallback, Looper.myLooper());
-                        Toast.makeText(getContext(), "Идёт запрос местоположения...", Toast.LENGTH_SHORT)
+                        Toast.makeText(getContext(), R.string.string_location_request, Toast.LENGTH_SHORT)
                                 .show();
                         map.setLocationSource(MapFragment.this);
                         requestingLocationUpdates = true;

@@ -1,4 +1,4 @@
-package ru.android_school.h_h.themostspb.View;
+package ru.android_school.h_h.themostspb;
 
 import android.content.Context;
 import android.content.res.TypedArray;

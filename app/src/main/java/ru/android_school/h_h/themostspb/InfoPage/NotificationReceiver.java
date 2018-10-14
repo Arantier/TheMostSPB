@@ -1,4 +1,4 @@
-package ru.android_school.h_h.themostspb.View;
+package ru.android_school.h_h.themostspb.InfoPage;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -12,9 +12,11 @@ import android.graphics.Color;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 
-import ru.android_school.h_h.themostspb.BridgePresenter;
+import ru.android_school.h_h.themostspb.BridgeSelector.BridgeSelectorPresenter;
 import ru.android_school.h_h.themostspb.R;
-import ru.android_school.h_h.themostspb.View.InfoActivity.BridgeInfoActivity;
+import ru.android_school.h_h.themostspb.InfoPage.InfoActivity.BridgeInfoActivity;
+
+import static ru.android_school.h_h.themostspb.BridgeSelector.SelectorActivity.BridgeSelectorActivity.SHARED_PREFERENCES_TIMES;
 
 public class NotificationReceiver extends BroadcastReceiver {
 
@@ -67,7 +69,7 @@ public class NotificationReceiver extends BroadcastReceiver {
                         .build();
                 manager.notify(id, bridgeNotification);
 
-                SharedPreferences bridgesAndTimes = context.getSharedPreferences(BridgePresenter.SHARED_PREFERENCES_TIMES,Context.MODE_PRIVATE);
+                SharedPreferences bridgesAndTimes = context.getSharedPreferences(SHARED_PREFERENCES_TIMES,Context.MODE_PRIVATE);
                 bridgesAndTimes.edit()
                         .remove(id+"")
                         .apply();

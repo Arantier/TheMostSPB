@@ -73,7 +73,7 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <ru.android_school.h_h.themostspb.View.BridgeView
+                <ru.android_school.h_h.themostspb.BridgeView
                     android:id="@+id/bridgeView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
@@ -87,17 +87,50 @@
 
         </android.support.v4.widget.NestedScrollView>
 
-        <fragment
-            android:id="@+id/errorPlaceholder"
-            android:name="ru.android_school.h_h.themostspb.View.Fragments.ErrorFragment"
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:id="@+id/intermediateListState"
+            android:background="@color/white">
 
-        <fragment
-            android:id="@+id/loadPlaceholder"
-            android:name="ru.android_school.h_h.themostspb.View.Fragments.LoadFragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            <ImageView
+                android:id="@+id/imageIndicator"
+                android:layout_width="128dp"
+                android:layout_height="128dp"
+                android:layout_marginBottom="128dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="128dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0"
+                android:src="@drawable/ic_error_outline_24dp" />
+
+            <TextView
+                android:id="@+id/stateDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:text="@string/load_text"
+                android:textSize="24sp"
+                android:textAlignment="center"
+                app:layout_constraintEnd_toEndOf="@+id/imageIndicator"
+                app:layout_constraintStart_toStartOf="@+id/imageIndicator"
+                app:layout_constraintTop_toBottomOf="@+id/imageIndicator" />
+
+            <Button
+                android:id="@+id/refreshButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/error_refresh"
+                app:layout_constraintEnd_toEndOf="@+id/stateDescription"
+                app:layout_constraintStart_toStartOf="@+id/stateDescription"
+                app:layout_constraintTop_toBottomOf="@+id/stateDescription"
+                android:visibility="gone" />
+        </android.support.constraint.ConstraintLayout>
 
     </android.support.design.widget.CoordinatorLayout>
 

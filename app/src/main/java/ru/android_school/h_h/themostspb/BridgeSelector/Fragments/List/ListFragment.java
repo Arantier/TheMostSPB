@@ -1,4 +1,4 @@
-package ru.android_school.h_h.themostspb.View.Fragments.List;
+package ru.android_school.h_h.themostspb.BridgeSelector.Fragments.List;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 import ru.android_school.h_h.themostspb.Model.Bridge;
 import ru.android_school.h_h.themostspb.R;
-import ru.android_school.h_h.themostspb.View.SelectorActivity.ActivityCallback;
+import ru.android_school.h_h.themostspb.BridgeSelector.SelectorActivity.ActivityCallback;
 
 public class ListFragment extends Fragment {
 

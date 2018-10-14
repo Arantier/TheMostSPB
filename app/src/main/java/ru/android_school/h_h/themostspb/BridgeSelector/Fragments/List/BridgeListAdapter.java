@@ -1,4 +1,4 @@
-package ru.android_school.h_h.themostspb.View.Fragments.List;
+package ru.android_school.h_h.themostspb.BridgeSelector.Fragments.List;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -9,8 +9,8 @@ import java.util.ArrayList;
 
 import ru.android_school.h_h.themostspb.Model.Bridge;
 import ru.android_school.h_h.themostspb.Model.BridgeManager;
-import ru.android_school.h_h.themostspb.View.BridgeView;
-import ru.android_school.h_h.themostspb.View.SelectorActivity.ActivityCallback;
+import ru.android_school.h_h.themostspb.BridgeView;
+import ru.android_school.h_h.themostspb.BridgeSelector.SelectorActivity.ActivityCallback;
 
 public class BridgeListAdapter extends RecyclerView.Adapter<BridgeListAdapter.ViewHolder> {
 

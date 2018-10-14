@@ -1,4 +1,4 @@
-package ru.android_school.h_h.themostspb.View.SelectorActivity;
+package ru.android_school.h_h.themostspb.BridgeSelector.SelectorActivity;
 
 public interface ActivityCallback {
 

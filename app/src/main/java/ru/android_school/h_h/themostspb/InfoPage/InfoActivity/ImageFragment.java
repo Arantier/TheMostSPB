@@ -1,4 +1,4 @@
-package ru.android_school.h_h.themostspb.View.InfoActivity;
+package ru.android_school.h_h.themostspb.InfoPage.InfoActivity;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -11,10 +11,11 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 
+import ru.android_school.h_h.themostspb.R;
+
 public class ImageFragment extends Fragment {
 
     private String URL;
-    private static final String apiUrl = "http://gdemost.handh.ru/";
 
     public static ImageFragment newInstance(String URL) {
         ImageFragment imageFragment = new ImageFragment();
@@ -27,7 +28,7 @@ public class ImageFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ImageView imageView = new ImageView(getContext());
         Glide.with(this)
-                .load(apiUrl+URL)
+                .load(getString(R.string.URL_host)+URL)
                 .into(imageView);
         imageView.setAdjustViewBounds(true);
         imageView.setScaleType(ImageView.ScaleType.FIT_XY);

@@ -20,7 +20,7 @@
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyCABN3lA4B1BaOS2l1t1ihRYoBxpZrJ8HQ"/>
 
-        <activity android:name=".View.SelectorActivity.BridgeSelectorActivity"
+        <activity android:name=".BridgeSelector.SelectorActivity.BridgeSelectorActivity"
             tools:ignore="InnerclassSeparator">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,11 +29,11 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".View.InfoActivity.BridgeInfoActivity"
+        <activity android:name=".InfoPage.InfoActivity.BridgeInfoActivity"
             tools:ignore="InnerclassSeparator" />
 
         <receiver
-            android:name=".View.NotificationReceiver"
+            android:name=".InfoPage.NotificationReceiver"
             android:enabled="true"
             android:exported="true"
             tools:ignore="InnerclassSeparator"
