@@ -1,0 +1,15 @@
+{
+	"id": 2,
+	"name": "Биржевой",
+	"description": "Биржево́й мост (c 1922 по 1989 год — мост Строи́телей) — разводной мост через Малую Неву в Санкт-Петербурге. Соединяет между собой Васильевский и Петроградский острова.",
+	"photo_open": "http://excava.ru/content_all/uploads/2016/02/birzhevoy-bridge.jpg",
+	"photo_close": "https://www.spb-guide.ru/img/468/12153.jpg",
+	"lng": 59.5646,
+	"lat": 30.1812,
+	"divorces":[
+		{
+			"start": "02:00",
+			"end": "04:55"
+		}
+	]
+}
