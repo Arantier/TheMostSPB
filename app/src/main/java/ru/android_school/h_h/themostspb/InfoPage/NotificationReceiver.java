@@ -61,7 +61,7 @@ public class NotificationReceiver extends BroadcastReceiver {
                 launchInfoIntent.putExtra(BridgeInfoActivity.ID_EXTRA, id);
                 PendingIntent wrapPIntent = PendingIntent.getActivity(context, id, launchInfoIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-                Notification bridgeNotification = builder.setSmallIcon(R.drawable.ic_adb_black_24dp)
+                Notification bridgeNotification = builder.setSmallIcon(R.drawable.ic_bridge_icon)
                         .setContentTitle(name)
                         .setContentText(notificationText)
                         .setAutoCancel(true)

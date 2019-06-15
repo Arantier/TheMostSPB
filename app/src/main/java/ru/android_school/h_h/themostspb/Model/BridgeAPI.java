@@ -8,9 +8,9 @@ import retrofit2.http.Path;
 
 public interface BridgeAPI {
 
-    @GET("bridges/?format=json")
+    @GET("bridges/bridges.json")
     Single<ArrayList<Bridge>> receiveBridges();
 
-    @GET("bridges/{id}/?format=json")
+    @GET("bridges/{id}/bridge.json")
     Single<Bridge> getBridgeById(@Path("id") int id);
 }

@@ -19,7 +19,7 @@ public class BridgeSelectorPresenter {
 
     public BridgeSelectorPresenter(BridgeSelectorActivity selectorActivity) {
         this.selectorView = selectorActivity;
-        provider = new BridgeProvider("http://gdemost.handh.ru/api/v1/");
+        provider = new BridgeProvider("https://raw.githubusercontent.com/Arantier/TheMostSPB/kursovaya/");
     }
 
     public void requestAllBridges() {

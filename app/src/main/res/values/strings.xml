@@ -14,7 +14,6 @@
     <string name="permission_rationale_message">Для предоставления вам возможности посещать мосты Петербурга максимально быстро необходимо выдать приложению разрешения на доступ к картам.</string>
     <string name="permission_rationale_close">Понятно</string>
     <string name="string_location_request">Идёт запрос местоположения...</string>
-    <string name="URL_host">http://gdemost.handh.ru/</string>
     <string name="string_times_15mins">15 мин</string>
     <string name="string_times_30mins">30 мин</string>
     <string name="string_times_45mins">45 мин</string>

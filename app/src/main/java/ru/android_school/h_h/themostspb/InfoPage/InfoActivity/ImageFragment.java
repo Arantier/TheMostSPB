@@ -28,7 +28,7 @@ public class ImageFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ImageView imageView = new ImageView(getContext());
         Glide.with(this)
-                .load(getString(R.string.URL_host)+URL)
+                .load(URL)
                 .into(imageView);
         imageView.setAdjustViewBounds(true);
         imageView.setScaleType(ImageView.ScaleType.FIT_XY);

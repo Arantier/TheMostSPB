@@ -158,7 +158,8 @@ public class BridgeSelectorActivity extends AppCompatActivity implements Activit
 
     @Override
     public void setData(Single<ArrayList<Bridge>> data) {
-        data.observeOn(AndroidSchedulers.mainThread())
+        data
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Consumer<ArrayList<Bridge>>() {
                     @Override
@@ -193,7 +194,8 @@ public class BridgeSelectorActivity extends AppCompatActivity implements Activit
 
     @Override
     public boolean getNotificationState(int id) {
-        SharedPreferences bridgesAndTimes = getSharedPreferences(SHARED_PREFERENCES_TIMES, Context.MODE_PRIVATE);;
-        return bridgesAndTimes.contains(id+"");
+        SharedPreferences bridgesAndTimes = getSharedPreferences(SHARED_PREFERENCES_TIMES, Context.MODE_PRIVATE);
+        ;
+        return bridgesAndTimes.contains(id + "");
     }
 }

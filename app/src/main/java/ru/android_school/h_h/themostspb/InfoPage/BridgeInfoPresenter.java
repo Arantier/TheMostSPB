@@ -14,7 +14,7 @@ public class BridgeInfoPresenter {
 
     public BridgeInfoPresenter(MVPInfoViewInterface activity) {
         this.activity = activity;
-        provider = new BridgeProvider("http://gdemost.handh.ru/api/v1/");
+        provider = new BridgeProvider("https://raw.githubusercontent.com/Arantier/TheMostSPB/kursovaya/");
     }
 
     public Single<Bridge> requestBridge(int id) {

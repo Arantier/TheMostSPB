@@ -228,9 +228,9 @@ public class BridgeInfoActivity extends AppCompatActivity implements TimePickerD
 
     @Override
     public int getNotificationDelay(int id) {
-        SharedPreferences bridgesAndTimes = getSharedPreferences(SHARED_PREFERENCES_TIMES,Context.MODE_PRIVATE);
-        if (bridgesAndTimes.contains(id+"")){
-            return bridgesAndTimes.getInt(id+"",0);
+        SharedPreferences bridgesAndTimes = getSharedPreferences(SHARED_PREFERENCES_TIMES, Context.MODE_PRIVATE);
+        if (bridgesAndTimes.contains(id + "")) {
+            return bridgesAndTimes.getInt(id + "", 0);
         } else {
             return 0;
         }
