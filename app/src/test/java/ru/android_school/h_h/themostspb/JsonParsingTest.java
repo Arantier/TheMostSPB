@@ -17,11 +17,20 @@ import static org.junit.Assert.assertEquals;
 
 public class JsonParsingTest {
 
+    //Объекты, представляющие собой данные о разводных мостах Санкт-Петербурга
     private Bridge alexBridge;
     private Bridge rialtoBridge;
     private Bridge blessBridge;
 
+    //Список мостов
     private ArrayList<Bridge> listOfBridge = new ArrayList<>();
+
+    /*
+        Этот метод инициализурует эти мосты перед каждым тестовым методом. У них имеется
+        представление в строке формата JSON, которая должна быть преобразована тестируемым методом
+        в классы с такими же данными, как и оригинальные классы. В случае провала проверки тест
+        должен вывести сообщение об этом и показать не совпадающие файлы.
+     */
 
     @Before
     public void prepareBridge() {
@@ -71,6 +80,10 @@ public class JsonParsingTest {
         listOfBridge.add(blessBridge);
     }
 
+    /*
+        Данный тест проверяет единственный мост, Александра Невского
+     */
+
     @Test
     public void testBridgeJson(){
         String alexBridgeJson = "{\n" +
@@ -96,6 +109,11 @@ public class JsonParsingTest {
         assertEquals(alexBridge,alexBridgeParsed);
     }
 
+    /*
+        Данный тест проверяет массив тестируемых мостов. Поскольку для проверки используются
+        сразу два парсера JSON, для массива мостов и для одного объекта-моста, его можно
+        считать простейшим случаем интеграционного тестирования.
+     */
     @Test
     public void testBridgeJsonArray() {
         String bridgeJsonString = "{\n" +
